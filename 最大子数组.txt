@@ -1,0 +1,62 @@
+<!--Notification
+
+    最大子数组问题是从股票买卖问题中抽象出来的。
+    股票在什么时候买入和在什么时候卖出能获得最大利润，这取决于买入和卖出时的价格差。而且很容易看出来，最高价卖出和最低价买入不一定能获得最高利润（正常情况下是可以的，但是可能存在最低价日期在最高价日期之后的情况）。
+    可以存在暴力方法，即简单地去尝试每对可能的买进和卖出日期组合（确保买入日期在卖出日期之前），这样子有n!种组合，时间复杂度明显为O(n^2)(为啥楷体下大写欧和数字零看起来一样呢？),我们将问题转化为最大子数组问题。
+    n个价格日期转化为n-1个价格差数组值，这样子我们可以通过计算这个价格差数组里面的最大和的子数组来判断买入和卖出的最大利润是多少。
+    使用分治法来求解最大子数组问题。使用分治法意味着我们要将子数组划分为两个规模尽量相等的子数组，也就是说，找到子数组的中央位置，比如说mid，然后考虑求解两个子数组[low..mid]，[mid+1..high]。所有最大子数组必然存在于下列三种情况之一：
+    1.完全位于[low..mid]中；
+    2.完全位于[mid+1..high]中；
+    3.跨越了中点。
+  
+    最大子数组存在于以上三种情况之中。求以上三种情况中的最大值就可以。观察之后可以发现，我们可以递归的求解[low..mid]和[mid+1..high]中最大子数组。
+    问题主要集中在求解跨中点的最大子数组值(其实我感觉不一定是要中点，但是中点是最适宜的可以尽量平均划分两个字问题的点)。
+ 
+    findMaxSubarrayCrossMid:
+    记左侧最大值为负无穷，左侧和记录为0。从中点向左去寻找，左侧和加上当前array[i]，和与最大值比较，左侧最大值记Math.max(左侧最大值，左侧和)，知道i为0；右侧同理，直到i为array.length-1;这样左最大值加上右最大值就可以求得跨过中点的最大子数组的值。
+    之后将跨过中点的最大值与单纯在左和右侧的最大值进行比较，求出该数组的最大子数组。时间复杂度为O(nlogn)。
+
+-->
+
+package test_501;
+
+import java.util.Scanner;
+
+public class test {
+ 
+  public static int findMaxSubarray(int[] a){
+	  if(a.length==0||a==null)
+		  return 0;
+	  return findMaxSubarray(a,0,a.length-1);
+	  
+  }
+    
+    public static int findMaxSubarray(int[] a,int l,int r){
+    	if(l>=r){
+    		return a[0];
+    	}
+    	
+    	int mid = (int)((r+l)/2);
+    	int left_max = Integer.MIN_VALUE;
+    	int left_sum =  0;
+    	for(int i =mid ; i>=1;i--){
+    		left_sum = left_sum+a[i];
+    		left_max = Math.max(left_max,left_sum);
+    	}
+    	
+       int right_max = Integer.MIN_VALUE;
+       int right_sum = 0;
+       for(int i = mid+1;i<=a.length-1;i++){
+    	   right_sum = right_sum+a[i];
+    	   right_max = Math.max(right_max, right_sum);
+       }
+       return Math.max(left_max+right_max, Math.max(findMaxSubarray(a,l,mid),findMaxSubarray(a, mid+1, r)));
+    	
+    	
+    }
+	
+	public static void main(String []args){
+		int[] a= { -2,1,-3,4,-1,2,1,-5,4};
+		 System.out.print(findMaxSubarray(a));//6
+	}
+}
