@@ -1,0 +1,28 @@
+package test_501;
+
+class stealer {
+    public static  int maxSubArray(int[] nums) {
+         if(nums==null||nums.length==0){
+             return 0;
+         }
+         return maxSubArray(nums,0,nums.length-1);    
+    }
+   public static int maxSubArray(int [] a ,int l, int r){
+	     int [] dp = new int [a.length];
+	     dp[0]=a[0];
+	     int max = Integer.MIN_VALUE;
+	     //System.out.print("dp"+dp[0]);
+	     for(int i=1;i<=a.length-1;i++){
+	    	 dp[i]=Math.max(dp[i-1]+a[i], a[i]);
+	    	/// System.out.print("dp"+i+"  "+dp[i]);
+	    	 max = Math.max(dp[i],max);
+	    	 //System.out.println("max="+max);
+	     }
+	    return max;
+   }
+    public static void main(String []args){
+    	int [] a = {-2,-1};
+    	System.out.print(maxSubArray(a));
+    }    
+   
+  }
