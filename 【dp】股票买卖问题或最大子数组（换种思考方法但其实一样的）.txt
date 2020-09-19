@@ -1,0 +1,31 @@
+<!-- 
+   使用动态规划来实现股票买卖的最大利润计算问题。
+   dp记录每天的最大利润，后一天的最大利润是不会影响到前一天的最大利润的。
+   可以通过前一天的最大利润值去计算第二天的最大利润。
+-->
+package test_501;
+
+import org.omg.CORBA.PUBLIC_MEMBER;
+
+public class stealer {
+    public static int sell_stock(int[] a){
+    	if(a.length<2||a==null){
+    		return 0;
+    	}
+    	int[][] dp=new int [a.length][2]; //0标注持过股且已经卖出，1标注持股未卖出
+    	dp[0][0]=0;
+    	dp[0][1]=-a[0];
+    	for(int i=1;i<=a.length-1;i++){
+    		dp[i][0]=Math.max(dp[i-1][0],dp[i-1][1]+a[i]);
+    		dp[i][1]=Math.max(dp[i-1][1],-a[i] );
+    	}
+    	return dp[a.length-1][0];
+    	
+    }
+	
+	 public static void main(String [] agrs){
+	  int [] a ={7,6,5,4,3,2,1};
+		 System.out.print(sell_stock(a));
+	 }
+
+}
